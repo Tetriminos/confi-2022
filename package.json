@@ -77,6 +77,13 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
+    "coveragePathIgnorePatterns": [
+      ".module.ts$",
+      ".spec.ts$",
+      ".config.ts$",
+      "src/db/migrations/",
+      "src/db/seeds/"
+    ],
     "testEnvironment": "node"
   }
 }

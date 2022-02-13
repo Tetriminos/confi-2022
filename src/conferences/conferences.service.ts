@@ -16,6 +16,8 @@ export class ConferencesService {
   }
 
   async findOne(id: number) {
-    return this.conferencesRepository.findOneOrFail(id);
+    return this.conferencesRepository.findOneOrFail(id, {
+      relations: ['bookings'],
+    });
   }
 }

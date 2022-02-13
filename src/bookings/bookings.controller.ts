@@ -8,10 +8,10 @@ export class BookingsController {
 
   @Post()
   create(
-    @Param('conferenceId') conferenceId: number,
+    @Param('conferenceId') conferenceId: string,
     @Body() createBookingDto: CreateBookingDto,
   ) {
-    return this.bookingsService.create(conferenceId, createBookingDto);
+    return this.bookingsService.create(+conferenceId, createBookingDto);
   }
 
   @Get()
