@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import appConfiguration from './config/app.config';
 import dbConfiguration from './config/db.config';
 import { AppController } from './app.controller';
@@ -9,6 +9,9 @@ import { BookingsModule } from './bookings/bookings.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './db/database.config';
 import { RouterModule } from '@nestjs/core';
+import { AuthModule } from './auth/auth.module';
+import { UsersService } from './users/users.service';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -22,6 +25,8 @@ import { RouterModule } from '@nestjs/core';
     }),
     ConferencesModule,
     BookingsModule,
+    AuthModule,
+    UsersModule,
     RouterModule.register([
       {
         path: '/conferences',
@@ -36,6 +41,6 @@ import { RouterModule } from '@nestjs/core';
     ]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, UsersService],
 })
 export class AppModule {}

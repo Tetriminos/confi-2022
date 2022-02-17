@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 // Custom seed file that inserts a conference with the name "NestJS Conf"
 export class SeedAConference1644781052810 implements MigrationInterface {
