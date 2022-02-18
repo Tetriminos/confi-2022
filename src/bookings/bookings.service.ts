@@ -8,6 +8,8 @@ import {
   BookingAlreadyExistsException,
   NoBookingException,
 } from '../common/exceptions';
+import { MailService } from '../mail/mail.service';
+import { confirmationMailConstants } from './constants';
 
 @Injectable()
 export class BookingsService {
@@ -16,6 +18,8 @@ export class BookingsService {
     private bookingRepository: Repository<Booking>,
     @Inject(ConferencesService)
     private conferencesService: ConferencesService,
+    @Inject(MailService)
+    private mailService: MailService,
   ) {}
 
   async create(conferenceId: number, createBookingDto: CreateBookingDto) {
@@ -29,9 +33,13 @@ export class BookingsService {
       throw new BookingAlreadyExistsException();
     }
 
+    const entryCode = await this._generateEntryCode(conferenceId);
+
+    await this._sendConfirmationEmail(createBookingDto.email, entryCode);
+
     const bookingWithConference = await this.bookingRepository.save({
       conference,
-      entryCode: await this._generateEntryCode(conferenceId),
+      entryCode,
       ...createBookingDto,
     });
 
@@ -83,6 +91,11 @@ export class BookingsService {
       throw new NoBookingException();
     }
 
+    await this.bookingRepository.save({
+      ...foundBooking,
+      verified: true,
+    });
+
     return foundBooking;
   }
 
@@ -105,7 +118,17 @@ export class BookingsService {
   _generateRandomAlphanumericCode(length = 6) {
     return Math.random()
       .toString(36) // radix 36 will return alphanumerics
-      .substring(2, length - 2) // remove `0.` prefix
+      .substring(2, length + 2) // remove `0.` prefix
       .toUpperCase();
+  }
+
+  async _sendConfirmationEmail(email: string, entryCode: string) {
+    const text = `Thank you for signing up for the conference. Your entry code to be used for registration is: ${entryCode}.`;
+    return this.mailService.sendMail({
+      subject: confirmationMailConstants.subject,
+      to: email,
+      text,
+      html: text,
+    });
   }
 }

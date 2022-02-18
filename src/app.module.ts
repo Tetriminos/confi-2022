@@ -12,6 +12,7 @@ import { RouterModule } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { UsersModule } from './users/users.module';
       imports: [ConfigModule],
       useClass: TypeOrmConfigService,
     }),
+    MailModule,
     ConferencesModule,
     BookingsModule,
     AuthModule,

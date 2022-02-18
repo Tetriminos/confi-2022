@@ -18,6 +18,9 @@ export class Booking {
   @Column({ length: 20 })
   entryCode: string;
 
+  @Column({ default: false })
+  verified: boolean;
+
   @ManyToOne(() => Conference, (conference) => conference.bookings)
   conference: Conference;
 }

@@ -52,7 +52,6 @@ export class BookingsController {
     @Param('conferenceId') conferenceId: string,
     @Query('code') code: string,
   ) {
-    console.log(code);
     return this.bookingsService.verify(+conferenceId, code);
   }
 }
