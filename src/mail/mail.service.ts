@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import { mailConstants } from './constants';
 import { ConfigService } from '@nestjs/config';
@@ -16,6 +16,7 @@ export class MailService {
     private readonly mailerService: MailerService,
     private readonly configService: ConfigService,
   ) {}
+  private readonly logger = new Logger('MAIL_SERVICE');
 
   async sendMail(options: SendEmailOptions) {
     const info = await this.mailerService.sendMail({
@@ -23,10 +24,10 @@ export class MailService {
       ...options,
     });
 
-    // TODO: logger logger.info(`Message sent: ${info.messageId}`);
-    //     logger.info(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+    this.logger.log(`Message sent: ${info.messageId}`);
+
     if (this.configService.get('environment') === 'development') {
-      console.log(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
+      this.logger.log(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
     }
 
     return info;

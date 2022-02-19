@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import helmet from 'helmet';
 import appConfiguration from './config/app.config';
 import dbConfiguration from './config/db.config';
 import { AppController } from './app.controller';
@@ -13,6 +14,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
 import { MailModule } from './mail/mail.module';
+import { LoggerMiddleware } from './common/middleware';
 
 @Module({
   imports: [
@@ -45,4 +47,10 @@ import { MailModule } from './mail/mail.module';
   controllers: [AppController],
   providers: [AppService, UsersService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(helmet(), LoggerMiddleware)
+      .forRoutes('conferences', 'admin');
+  }
+}

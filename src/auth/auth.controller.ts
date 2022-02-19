@@ -3,12 +3,12 @@ import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
 import { AdminLoginDto } from './dto/AdminLoginDto';
 
-@Controller()
+@Controller('admin')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
-  @Post('admin/login')
+  @Post('login')
   async login(@Body() adminLogin: AdminLoginDto) {
     return this.authService.login(adminLogin);
   }
