@@ -1,4 +1,3 @@
-import { ConfigModule } from '@nestjs/config';
 import baseDbConfig from './src/config/db.config';
 
 const dbConfig = baseDbConfig();
@@ -25,12 +24,5 @@ const dbConfiguration = () => {
     },
   ];
 };
-//
-// ConfigModule.forRoot({
-//   isGlobal: true,
-//   load: [dbConfiguration],
-// });
-
-console.log(dbConfiguration());
 
 export default dbConfiguration();
