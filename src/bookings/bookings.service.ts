@@ -11,7 +11,6 @@ import {
 } from '../common/exceptions';
 import { MailService } from '../mail/mail.service';
 import { confirmationMailConstants } from './constants';
-import {  } from '../common/exceptions/booking-already-verified.exception';
 
 @Injectable()
 export class BookingsService {
