@@ -1,15 +1,13 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { RouterModule } from '@nestjs/core';
 import helmet from 'helmet';
 import appConfiguration from './config/app.config';
 import dbConfiguration from './config/db.config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConferencesModule } from './conferences/conferences.module';
 import { BookingsModule } from './bookings/bookings.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './db/database.config';
-import { RouterModule } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
@@ -44,8 +42,7 @@ import { LoggerMiddleware } from './common/middleware';
       },
     ]),
   ],
-  controllers: [AppController],
-  providers: [AppService, UsersService],
+  providers: [UsersService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

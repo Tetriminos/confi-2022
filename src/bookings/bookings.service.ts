@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateBookingDto } from './dto/create-booking.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CreateBookingDto } from './dto';
 import { Booking } from './entities/booking.entity';
 import { ConferencesService } from '../conferences/conferences.service';
 import {
@@ -44,9 +44,10 @@ export class BookingsService {
       ...createBookingDto,
     });
 
-    // we create a new object called booking, where we remove the conference object appended by `save`
+    // we create a new object called booking, where we remove the conference \n
+    // object appended by `save`, and the entry code
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { conference: _, ...booking } = bookingWithConference;
+    const { conference: _, entryCode: __, ...booking } = bookingWithConference;
     return booking;
   }
 

@@ -5,7 +5,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Booking } from './entities/booking.entity';
 import { ConferencesService } from '../conferences/conferences.service';
 import { Conference } from '../conferences/entities/conference.entity';
-import { CreateBookingDto } from './dto/create-booking.dto';
+import { CreateBookingDto } from './dto';
 
 describe('BookingsController', () => {
   let controller: BookingsController;
@@ -57,7 +57,9 @@ describe('BookingsController', () => {
         .spyOn(service, 'create')
         .mockImplementation(() => Promise.resolve(result));
 
-      expect(await controller.create('1', requestBody)).toBe(result);
+      expect(await controller.create({ conferenceId: '1' }, requestBody)).toBe(
+        result,
+      );
     });
   });
 });

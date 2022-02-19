@@ -19,7 +19,6 @@ async function bootstrap() {
     .setTitle('Confi')
     .setDescription('A comfi conference booking tool')
     .setVersion('1.0')
-    .addTag('conferences')
     .addBearerAuth()
     .build();
 

@@ -9,21 +9,23 @@ import {
   UseFilters,
   Query,
 } from '@nestjs/common';
-import { BookingsService } from './bookings.service';
-import { CreateBookingDto } from './dto/create-booking.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { BookingsService } from './bookings.service';
+import {
+  CreateBookingDto,
+  ConferenceIdParamDto,
+  RemoveBookingParamsDto,
+  BookingCodeQueryParamDto,
+} from './dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import {
   NoConferenceFilter,
-  BookingAlreadyExistsFilter,
   NoBookingFilter,
+  BookingAlreadyExistsFilter,
+  BookingAlreadyVerifiedFilter,
 } from '../common/filters';
-import { ConferenceIdParamDto } from './dto/conference-id-param.dto';
-import { RemoveBookingParamsDto } from './dto/remove-booking-params.dto';
-import { BookingCodeQueryParamDto } from './dto/booking-code-query-param.dto';
 import { conferenceIdParamSwaggerOptions } from './constants';
 
-@ApiBearerAuth()
 @Controller()
 export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
@@ -39,6 +41,7 @@ export class BookingsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get()
   @ApiParam(conferenceIdParamSwaggerOptions)
   findAll(@Param() { conferenceId }: ConferenceIdParamDto) {
@@ -46,6 +49,7 @@ export class BookingsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   @UseFilters(NoBookingFilter)
   @ApiParam(conferenceIdParamSwaggerOptions)
@@ -59,7 +63,9 @@ export class BookingsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get('verify')
+  @UseFilters(NoConferenceFilter, BookingAlreadyVerifiedFilter)
   @ApiParam(conferenceIdParamSwaggerOptions)
   @ApiQuery({
     name: 'code',

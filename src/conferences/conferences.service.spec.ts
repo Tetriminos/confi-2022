@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConferencesService } from './conferences.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Conference } from './entities/conference.entity';
 import { Repository } from 'typeorm';
+import { ConferencesService } from './conferences.service';
+import { Conference } from './entities/conference.entity';
 import { Booking } from '../bookings/entities/booking.entity';
 
 describe('ConferencesService', () => {

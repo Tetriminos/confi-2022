@@ -5,7 +5,7 @@ import { BookingsService } from './bookings.service';
 import { Booking } from './entities/booking.entity';
 import { ConferencesService } from '../conferences/conferences.service';
 import { Conference } from '../conferences/entities/conference.entity';
-import { CreateBookingDto } from './dto/create-booking.dto';
+import { CreateBookingDto } from './dto';
 
 describe('BookingsService', () => {
   let service: BookingsService;

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import { mailConstants } from './constants';
-import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 
 type SendEmailOptions = Pick<
