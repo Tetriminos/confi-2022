@@ -6,10 +6,12 @@ import { Booking } from './entities/booking.entity';
 import { ConferencesService } from '../conferences/conferences.service';
 import {
   BookingAlreadyExistsException,
+  BookingAlreadyVerifiedException,
   NoBookingException,
 } from '../common/exceptions';
 import { MailService } from '../mail/mail.service';
 import { confirmationMailConstants } from './constants';
+import {  } from '../common/exceptions/booking-already-verified.exception';
 
 @Injectable()
 export class BookingsService {
@@ -91,12 +93,14 @@ export class BookingsService {
       throw new NoBookingException();
     }
 
-    await this.bookingRepository.save({
+    if (foundBooking.verified === true) {
+      throw new BookingAlreadyVerifiedException();
+    }
+
+    return this.bookingRepository.save({
       ...foundBooking,
       verified: true,
     });
-
-    return foundBooking;
   }
 
   async _generateEntryCode(conferenceId) {
