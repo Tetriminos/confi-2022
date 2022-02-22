@@ -6,6 +6,7 @@ import { Booking } from './entities/booking.entity';
 import { ConferencesService } from '../conferences/conferences.service';
 import { Conference } from '../conferences/entities/conference.entity';
 import { CreateBookingDto } from './dto';
+import { MailService } from '../mail/mail.service';
 
 describe('BookingsController', () => {
   let controller: BookingsController;
@@ -22,6 +23,10 @@ describe('BookingsController', () => {
         },
         {
           provide: ConferencesService,
+          useValue: {},
+        },
+        {
+          provide: MailService,
           useValue: {},
         },
       ],
@@ -47,7 +52,6 @@ describe('BookingsController', () => {
         firstName: 'Test',
         lastName: 'User',
         email: 'testmail@mail.com',
-        entryCode: 'test',
         conference: {
           id: 1,
           name: 'NestJS Conf',

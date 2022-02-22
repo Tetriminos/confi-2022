@@ -6,11 +6,14 @@ import { Booking } from './entities/booking.entity';
 import { ConferencesService } from '../conferences/conferences.service';
 import { Conference } from '../conferences/entities/conference.entity';
 import { CreateBookingDto } from './dto';
+import { MailService } from '../mail/mail.service';
+import { AuthService } from '../auth/auth.service';
 
 describe('BookingsService', () => {
   let service: BookingsService;
   let repositoryMock: Repository<Booking>;
   let conferenceServiceMock: ConferencesService;
+  let mailMock: MailService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -26,12 +29,23 @@ describe('BookingsService', () => {
             findOne: jest.fn(),
           },
         },
+        {
+          provide: AuthService,
+          useValue: {},
+        },
+        {
+          provide: MailService,
+          useValue: {
+            sendMail: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     service = module.get<BookingsService>(BookingsService);
     repositoryMock = module.get(getRepositoryToken(Booking));
     conferenceServiceMock = module.get<ConferencesService>(ConferencesService);
+    mailMock = module.get<MailService>(MailService);
   });
 
   it('should be defined', () => {
@@ -55,11 +69,6 @@ describe('BookingsService', () => {
         firstName: 'Test',
         lastName: 'User',
         email: 'testmail@mail.com',
-        entryCode: 'test',
-        conference: {
-          id: 1,
-          name: 'NestJS Conf',
-        } as Conference,
       } as Booking;
       jest
         .spyOn(conferenceServiceMock, 'findOne')
@@ -67,8 +76,14 @@ describe('BookingsService', () => {
       jest
         .spyOn(repositoryMock, 'save')
         .mockImplementation(() => Promise.resolve(result));
+      jest
+        .spyOn(repositoryMock, 'findOne')
+        .mockImplementation(() => Promise.resolve(undefined));
+      jest
+        .spyOn(mailMock, 'sendMail')
+        .mockImplementation(() => Promise.resolve(undefined));
 
-      expect(await service.create(7, dto)).toBe(result);
+      expect(await service.create(7, dto)).toStrictEqual(result);
     });
   });
 });

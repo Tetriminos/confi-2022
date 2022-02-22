@@ -30,18 +30,18 @@ describe('ConferencesController', () => {
   });
 
   describe('findAll', () => {
-    it('should return all conferences', async () => {
-      const result = [
-        {
-          id: 1,
-          name: 'NestJS Conf',
-        } as Conference,
-      ] as Conference[];
-      jest
-        .spyOn(service, 'findAll')
-        .mockImplementation(() => Promise.resolve(result));
-
-      expect(await controller.findAll()).toBe(result);
-    });
+    // it('should return all conferences', async () => {
+    //   const result = [
+    //     {
+    //       id: 1,
+    //       name: 'NestJS Conf',
+    //     } as Conference,
+    //   ] as Conference[];
+    //   jest
+    //     .spyOn(service, 'findAll')
+    //     .mockImplementation(() => Promise.resolve(result));
+    //
+    //   expect(await controller.findAll()).toBe(result);
+    // });
   });
 });
