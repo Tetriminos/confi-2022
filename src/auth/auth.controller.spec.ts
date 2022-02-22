@@ -12,7 +12,9 @@ describe('AuthController', () => {
       providers: [
         {
           provide: AuthService,
-          useValue: {},
+          useValue: {
+            login: jest.fn(),
+          },
         },
       ],
     }).compile();
@@ -23,5 +25,26 @@ describe('AuthController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  describe('POST /login', () => {
+    const user = {
+      username: 'admin',
+      password: 'test',
+    };
+
+    const returnedAccessTokenObject = { access_token: 'ssss' };
+
+    beforeEach(() => {
+      jest
+        .spyOn(service, 'login')
+        .mockImplementation(() => Promise.resolve(returnedAccessTokenObject));
+    });
+
+    it('should call the auth services login method when given a valid user object', async () => {
+      expect(await controller.login(user)).toStrictEqual(
+        returnedAccessTokenObject,
+      );
+    });
   });
 });
