@@ -36,9 +36,7 @@ describe('AuthController', () => {
     const returnedAccessTokenObject = { access_token: 'ssss' };
 
     beforeEach(() => {
-      jest
-        .spyOn(service, 'login')
-        .mockImplementation(() => Promise.resolve(returnedAccessTokenObject));
+      jest.spyOn(service, 'login').mockResolvedValue(returnedAccessTokenObject);
     });
 
     it('should call the auth services login method when given a valid user object', async () => {
