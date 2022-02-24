@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityNotFoundError, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Conference } from './entities/conference.entity';
 import { NoConferenceException } from '../common/exceptions';
 
@@ -17,17 +17,12 @@ export class ConferencesService {
   }
 
   async findOne(id: number) {
-    let conference: Conference;
-    try {
-      conference = await this.conferencesRepository.findOneOrFail(id, {
-        relations: ['bookings'],
-      });
-    } catch (error) {
-      if (error instanceof EntityNotFoundError) {
-        throw new NoConferenceException(id);
-      } else {
-        throw error;
-      }
+    const conference = await this.conferencesRepository.findOne(id, {
+      relations: ['bookings'],
+    });
+
+    if (conference === undefined) {
+      throw new NoConferenceException(id);
     }
 
     return conference;

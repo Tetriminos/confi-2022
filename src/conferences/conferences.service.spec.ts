@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { ConferencesService } from './conferences.service';
 import { Conference } from './entities/conference.entity';
 import { Booking } from '../bookings/entities/booking.entity';
+import { NoConferenceException } from '../common/exceptions';
 
 describe('ConferencesService', () => {
   let service: ConferencesService;
@@ -45,9 +46,7 @@ describe('ConferencesService', () => {
           ],
         } as Conference,
       ] as Conference[];
-      jest
-        .spyOn(repositoryMock, 'find')
-        .mockImplementation(() => Promise.resolve(result));
+      jest.spyOn(repositoryMock, 'find').mockResolvedValue(result);
 
       expect(await service.findAll()).toBe(result);
     });
@@ -68,11 +67,15 @@ describe('ConferencesService', () => {
           } as Booking,
         ],
       } as Conference;
-      jest
-        .spyOn(repositoryMock, 'findOneOrFail')
-        .mockImplementation(() => Promise.resolve(result));
+      jest.spyOn(repositoryMock, 'findOne').mockResolvedValue(result);
 
       expect(await service.findOne(1)).toBe(result);
+    });
+
+    it("should throw an exception if the conference doesn't exist", async () => {
+      jest.spyOn(repositoryMock, 'findOne').mockResolvedValue(undefined);
+
+      await expect(service.findOne(1)).rejects.toThrow(NoConferenceException);
     });
   });
 });
