@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateBookingDto } from './dto';
 import { Booking } from './entities/booking.entity';
+import { Conference } from '../conferences/entities/conference.entity';
 import { ConferencesService } from '../conferences/conferences.service';
 import {
   BookingAlreadyExistsException,
@@ -34,7 +35,7 @@ export class BookingsService {
       throw new BookingAlreadyExistsException();
     }
 
-    const entryCode = await this._generateEntryCode(conferenceId);
+    const entryCode = await this._generateEntryCode(conference);
 
     await this._sendConfirmationEmail(createBookingDto.email, entryCode);
 
@@ -78,7 +79,7 @@ export class BookingsService {
     };
   }
 
-  async verify(conferenceId: number, entryCode: string) {
+  async verify(conferenceId: number, entryCode: string): Promise<Booking> {
     const conference = await this.conferencesService.findOne(conferenceId);
     const foundBooking = await this.bookingRepository.findOne({
       where: [
@@ -103,17 +104,16 @@ export class BookingsService {
     });
   }
 
-  async _generateEntryCode(conferenceId) {
-    const conference = await this.conferencesService.findOne(conferenceId);
+  async _generateEntryCode(conference: Conference) {
     const entryCode = this._generateRandomAlphanumericCode();
-
     const bookingWithEntryCodeExists = await this.bookingRepository.findOne({
       entryCode,
       conference,
     });
 
+    // if the entry code already exists for a booking in this conference, we retry
     if (bookingWithEntryCodeExists) {
-      return this._generateEntryCode(conferenceId);
+      return this._generateEntryCode(conference);
     }
 
     return entryCode;

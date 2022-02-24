@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import mockJwtService, { returnValues } from '../utils/mocks/jwt.service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -20,9 +21,7 @@ describe('AuthService', () => {
         },
         {
           provide: JwtService,
-          useValue: {
-            sign: jest.fn(),
-          },
+          useValue: mockJwtService,
         },
       ],
     }).compile();
@@ -67,17 +66,15 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    const string = 'aaaa';
     const user = {
       username: 'admin',
       userId: '7',
     };
-    beforeEach(() => {
-      jest.spyOn(jwtServiceMock, 'sign').mockImplementation(() => string);
-    });
 
     it('should return an object with an access_token', async () => {
-      expect(await service.login(user)).toStrictEqual({ access_token: string });
+      expect(await service.login(user)).toStrictEqual({
+        access_token: returnValues.SIGN_RESULT,
+      });
       expect(jwtServiceMock.sign).toBeCalledWith({
         username: user.username,
         sub: user.userId,
