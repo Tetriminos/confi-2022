@@ -16,7 +16,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Confi')
-    .setDescription('A comfi conference booking tool')
+    .setDescription('A comfy conference booking tool')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
