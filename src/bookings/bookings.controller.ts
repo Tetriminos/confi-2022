@@ -31,12 +31,6 @@ import {
   BookingCodeQueryParamDto,
 } from './dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import {
-  NoConferenceFilter,
-  NoBookingFilter,
-  BookingAlreadyExistsFilter,
-  BookingAlreadyVerifiedFilter,
-} from '../common/filters';
 import { conferenceIdParamSwaggerOptions } from './constants';
 import { Booking } from './entities/booking.entity';
 
@@ -46,7 +40,6 @@ export class BookingsController {
   constructor(private readonly bookingsService: BookingsService) {}
 
   @Post()
-  @UseFilters(NoConferenceFilter, BookingAlreadyExistsFilter)
   @ApiOperation({
     summary: 'Create a new booking',
     description: 'Creates a new booking, sends the entry code via email.',
@@ -83,7 +76,6 @@ export class BookingsController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Delete(':id')
-  @UseFilters(NoBookingFilter)
   @ApiOperation({ summary: 'Delete a booking' })
   @ApiOkResponse({ description: 'Booking successfully deleted.' })
   @ApiBadRequestResponse()
@@ -102,7 +94,6 @@ export class BookingsController {
   @ApiBearerAuth()
   @Post('verify')
   @HttpCode(HttpStatus.OK)
-  @UseFilters(NoConferenceFilter, BookingAlreadyVerifiedFilter)
   @ApiOperation({
     summary: 'Verify entry code',
     description:
