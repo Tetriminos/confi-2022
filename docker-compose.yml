@@ -1,6 +1,17 @@
 version: '3'
 
 services:
+  confi:
+    build:
+      context: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=postgres
+    depends_on:
+      - postgres
   postgres:
     image: postgres:14
     ports:
