@@ -1,4 +1,4 @@
-FROM node:16.4-alpine as builder
+FROM node:16.14-alpine as builder
 
 ENV NODE_ENV build
 
@@ -12,7 +12,7 @@ COPY --chown=node:node . .
 RUN npm run build \
     && npm prune --production
 
-FROM node:16.4-alpine
+FROM node:16.14-alpine
 
 ENV NODE_ENV production
 
