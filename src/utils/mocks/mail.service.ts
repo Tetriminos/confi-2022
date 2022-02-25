@@ -1,3 +1,3 @@
 export default {
-  sendMail: jest.fn().mockImplementation(() => Promise.resolve(undefined)),
+  sendMail: jest.fn().mockImplementation(() => Promise.resolve({ messageId: 333 })),
 };

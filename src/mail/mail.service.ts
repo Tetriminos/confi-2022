@@ -1,8 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
-import { mailConstants } from './constants';
 import * as nodemailer from 'nodemailer';
+import { mailConstants } from './constants';
+import { UnableToSendEmailException } from '../common/exceptions';
 
 type SendEmailOptions = Pick<
   ISendMailOptions,
@@ -19,10 +20,19 @@ export class MailService {
   private readonly logger = new Logger('MAIL_SERVICE');
 
   async sendMail(options: SendEmailOptions) {
-    const info = await this.mailerService.sendMail({
-      from: mailConstants.fromEmail,
-      ...options,
-    });
+    let info;
+    try {
+      info = await this.mailerService.sendMail({
+        from: mailConstants.fromEmail,
+        ...options,
+      });
+    } catch (err) {
+      this.logger.error(
+        `Error while trying to send email to "${options.to}", error message: ${err.message}`,
+        err.stack,
+      );
+      throw new UnableToSendEmailException();
+    }
 
     this.logger.log(`Message sent: ${info.messageId}`);
 

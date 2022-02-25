@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: e2e.Dockerfile
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules # 'hack' prevents node_modules/ in the container from being overridden
+    working_dir: /usr/src/app
+    env_file:
+      - .env.test
+    networks:
+      - e2e
+    depends_on:
+      - postgres
+    command: npm run test:e2e
+
+  postgres:
+    container_name: postgres-e2e
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - e2e
+
+networks:
+  e2e: {}
+
+volumes:
+  pgdata: {}

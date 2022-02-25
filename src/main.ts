@@ -7,13 +7,12 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { validationPipeOptions } from './common/pipes';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalPipes(
-    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
-  );
+  app.useGlobalPipes(new ValidationPipe(validationPipeOptions));
 
   const config = new DocumentBuilder()
     .setTitle('Confi')
