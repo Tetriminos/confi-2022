@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsPhoneNumber, IsString } from 'class-validator';
 
 export class CreateBookingDto {
   @ApiProperty()
@@ -13,4 +13,8 @@ export class CreateBookingDto {
   @ApiProperty()
   @IsEmail()
   email: string;
+
+  @ApiProperty()
+  @IsPhoneNumber()
+  phoneNumber: string;
 }

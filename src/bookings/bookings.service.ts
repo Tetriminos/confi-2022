@@ -27,11 +27,14 @@ export class BookingsService {
   async create(conferenceId: number, createBookingDto: CreateBookingDto) {
     const conference = await this.conferencesService.findOne(conferenceId);
 
-    const bookingWithEmailExists = await this.bookingRepository.findOne({
-      email: createBookingDto.email,
+    const bookingWithInfoAlreadyExists = await this.bookingRepository.findOne({
+      where: [
+        { email: createBookingDto.email },
+        { phoneNumber: createBookingDto.phoneNumber },
+      ],
     });
 
-    if (bookingWithEmailExists) {
+    if (bookingWithInfoAlreadyExists) {
       throw new BookingAlreadyExistsException();
     }
 

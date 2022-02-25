@@ -48,12 +48,14 @@ describe('BookingsController', () => {
         firstName: 'Test',
         lastName: 'User',
         email: 'testmail@mail.com',
+        phoneNumber: '+38514833888',
       } as CreateBookingDto;
 
       const result = {
         firstName: 'Test',
         lastName: 'User',
         email: 'testmail@mail.com',
+        phoneNumber: '+38514833888',
         conference: {
           id: 1,
           name: 'NestJS Conf',
@@ -75,6 +77,7 @@ describe('BookingsController', () => {
           firstName: 'Test',
           lastName: 'Test1',
           email: 'test@mail.com',
+          phoneNumber: '+38514833888',
           entryCode: 'VVRKBZ',
           verified: false,
         },
@@ -83,6 +86,7 @@ describe('BookingsController', () => {
           firstName: 'Test',
           lastName: 'Test2',
           email: 'test2@mail.com',
+          phoneNumber: '+38514833889',
           entryCode: 'P5UVY4',
           verified: true,
         },
@@ -121,6 +125,7 @@ describe('BookingsController', () => {
         firstName: 'Test',
         lastName: 'User',
         email: 'testmail@mail.com',
+        phoneNumber: '+38514833888',
         entryCode,
         verified: true,
       } as Booking;

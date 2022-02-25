@@ -49,7 +49,8 @@ export class BookingsController {
     type: Booking,
   })
   @ApiConflictResponse({
-    description: 'A booking with the provided email already exists.',
+    description:
+      'A booking with the provided email or phone number already exists.',
   })
   @ApiBadRequestResponse()
   @ApiParam(conferenceIdParamSwaggerOptions)

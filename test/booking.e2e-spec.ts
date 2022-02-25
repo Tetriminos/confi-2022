@@ -51,6 +51,7 @@ describe('BookingController (e2e)', () => {
         firstName: 'Name',
         lastName: 'Surname',
         email: 'test@mail.com',
+        phoneNumber: '+38514833887',
         id: expect.any(Number),
         verified: false,
       };
@@ -60,6 +61,7 @@ describe('BookingController (e2e)', () => {
           firstName: booking.firstName,
           lastName: booking.lastName,
           email: booking.email,
+          phoneNumber: booking.phoneNumber,
         })
         .expect(201);
 
@@ -86,6 +88,27 @@ describe('BookingController (e2e)', () => {
       await deleteBookingByEmail(dbConnection, booking.email);
     });
 
+    it('should return HTTP 400 if the provided fields are not valid', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/conferences/1/bookings')
+        .send({
+          firstName: 'Name',
+          lastName: 'Surname',
+          email: 'test.com',
+          phoneNumber: '14833888',
+        })
+        .expect(400);
+
+      expect(response.body).toStrictEqual({
+        statusCode: 400,
+        message: [
+          'email must be an email',
+          'phoneNumber must be a valid phone number',
+        ],
+        error: 'Bad Request',
+      });
+    });
+
     it('should return HTTP 409 if a booking with the email already exists', async () => {
       const response = await request(app.getHttpServer())
         .post('/conferences/1/bookings')
@@ -93,11 +116,29 @@ describe('BookingController (e2e)', () => {
           firstName: 'Name',
           lastName: 'Surname',
           email: 'john@mail.com',
+          phoneNumber: '+38514833887',
         })
         .expect(409);
 
       expect(response.body).toStrictEqual({
-        message: 'A booking with this email already exists',
+        message: 'A booking with this email or phone number already exists',
+        statusCode: 409,
+      });
+    });
+
+    it('should return HTTP 409 if a booking with the phone number already exists', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/conferences/1/bookings')
+        .send({
+          firstName: 'Name',
+          lastName: 'Surname',
+          email: 'test@mail.com',
+          phoneNumber: '+38514833888',
+        })
+        .expect(409);
+
+      expect(response.body).toStrictEqual({
+        message: 'A booking with this email or phone number already exists',
         statusCode: 409,
       });
     });
@@ -109,6 +150,7 @@ describe('BookingController (e2e)', () => {
           firstName: 'Name',
           lastName: 'Surname',
           email: 'test@mail.com',
+          phoneNumber: '+38514833887',
         })
         .expect(404);
 
@@ -128,6 +170,7 @@ describe('BookingController (e2e)', () => {
           firstName: 'Name',
           lastName: 'Surname',
           email: 'mailfail@mail.com',
+          phoneNumber: '+38514833887',
         })
         .expect(500);
 
@@ -149,6 +192,7 @@ describe('BookingController (e2e)', () => {
           firstName: 'John',
           lastName: 'Smith',
           email: 'john@mail.com',
+          phoneNumber: '+38514833888',
           id: 1,
           verified: false,
           entryCode: 'VV23ZX',
@@ -157,6 +201,7 @@ describe('BookingController (e2e)', () => {
           firstName: 'Jane',
           lastName: 'Smith',
           email: 'jane@mail.com',
+          phoneNumber: '+38514833889',
           id: 2,
           verified: true,
           entryCode: 'AAABC1',
@@ -213,6 +258,7 @@ describe('BookingController (e2e)', () => {
         firstName: 'Sinisa',
         lastName: 'Vuco',
         email: 'vuco@mail.com',
+        phoneNumber: '+38514833887',
         entryCode: 'AVTMAT',
         verified: false,
         conferenceId: 1,
@@ -237,6 +283,7 @@ describe('BookingController (e2e)', () => {
         firstName: 'Sinisa',
         lastName: 'Vuco',
         email: 'vuco@mail.com',
+        phoneNumber: '+38514833887',
         entryCode: 'AVTMAT',
         verified: false,
         conferenceId: 1,
@@ -302,6 +349,7 @@ describe('BookingController (e2e)', () => {
         firstName: 'Sinisa',
         lastName: 'Vuco',
         email: 'vuco@mail.com',
+        phoneNumber: '+38514833887',
         entryCode: 'AVTMAT',
         verified: false,
         conferenceId: 1,
@@ -316,6 +364,7 @@ describe('BookingController (e2e)', () => {
         firstName: booking.firstName,
         lastName: booking.lastName,
         email: booking.email,
+        phoneNumber: booking.phoneNumber,
         entryCode: booking.entryCode,
         verified: true,
         id: expect.any(Number),
@@ -338,6 +387,7 @@ describe('BookingController (e2e)', () => {
         firstName: 'Sinisa',
         lastName: 'Vuco',
         email: 'vuco@mail.com',
+        phoneNumber: '+38514833887',
         entryCode: 'AVTMAT',
         verified: false,
         conferenceId: 1,
@@ -403,6 +453,7 @@ describe('BookingController (e2e)', () => {
         firstName: 'Sinisa',
         lastName: 'Vuco',
         email: 'vuco@mail.com',
+        phoneNumber: '+38514833887',
         entryCode: 'AVTMAT',
         verified: true,
         conferenceId: 1,

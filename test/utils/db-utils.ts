@@ -4,10 +4,10 @@ export const seed = async (connection) => {
   );
 
   await connection.query(
-    `INSERT INTO "booking" ("firstName", "lastName", email, "entryCode", verified, "conferenceId")
-        VALUES
-          ('John', 'Smith', 'john@mail.com', 'VV23ZX', false, 1),
-          ('Jane', 'Smith', 'jane@mail.com', 'AAABC1', true, 1)`,
+    `INSERT INTO "booking" ("firstName", "lastName", email, "phoneNumber", "entryCode", verified, "conferenceId")
+      VALUES
+        ('John', 'Smith', 'john@mail.com', '+38514833888', 'VV23ZX', false, 1),
+        ('Jane', 'Smith', 'jane@mail.com', '+38514833889', 'AAABC1', true, 1)`,
   );
 };
 
@@ -27,10 +27,10 @@ export const deleteBookingByEmail = async (connection, email) => {
 
 export const insertBooking = async (connection, booking) => {
   const dbResponse = await connection.query(
-    `INSERT INTO booking ("firstName", "lastName", email, "entryCode", verified, "conferenceId")
-                  VALUES
-                    ('${booking.firstName}', '${booking.lastName}', '${booking.email}', '${booking.entryCode}', ${booking.verified}, ${booking.conferenceId})
-                  RETURNING id`,
+    `INSERT INTO booking ("firstName", "lastName", email, "phoneNumber", "entryCode", verified, "conferenceId")
+      VALUES
+        ('${booking.firstName}', '${booking.lastName}', '${booking.email}', '${booking.phoneNumber}', '${booking.entryCode}', ${booking.verified}, ${booking.conferenceId})
+      RETURNING id`,
   );
   return dbResponse[0].id;
 };

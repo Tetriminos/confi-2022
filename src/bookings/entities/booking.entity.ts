@@ -16,6 +16,10 @@ export class Booking {
   @ApiProperty()
   lastName: string;
 
+  @Column({ length: 16 })
+  @ApiProperty()
+  phoneNumber: string;
+
   @Column({ length: 320 })
   @ApiProperty()
   email: string;

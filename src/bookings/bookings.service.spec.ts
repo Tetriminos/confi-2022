@@ -66,6 +66,7 @@ describe('BookingsService', () => {
         firstName: 'Test',
         lastName: 'User',
         email: 'testmail@mail.com',
+        phoneNumber: '+38514833888',
       } as CreateBookingDto;
 
       const conferenceResult = {
@@ -77,6 +78,7 @@ describe('BookingsService', () => {
         firstName: 'Test',
         lastName: 'User',
         email: 'testmail@mail.com',
+        phoneNumber: '+38514833888',
       } as Booking;
 
       const signInConfirmationRegex =
@@ -109,6 +111,7 @@ describe('BookingsService', () => {
         firstName: 'Test',
         lastName: 'User',
         email: 'testmail@mail.com',
+        phoneNumber: '+38514833888',
       } as CreateBookingDto;
 
       const conferenceId = 3;
@@ -132,6 +135,7 @@ describe('BookingsService', () => {
         firstName: 'Test',
         lastName: 'User',
         email: 'testmail@mail.com',
+        phoneNumber: '+38514833888',
       } as CreateBookingDto;
 
       const conferenceResult = {
@@ -150,6 +154,7 @@ describe('BookingsService', () => {
           firstName: 'OtherName',
           lastName: 'OtherLastName',
           email: 'testmail@mail.com',
+          phoneNumber: '+38514833889',
           entryCode: 'test',
           verified: false,
         } as Booking);
@@ -164,6 +169,44 @@ describe('BookingsService', () => {
     });
   });
 
+  it('should throw an exception if a booking with the provided phone number exists', async () => {
+    const dto = {
+      firstName: 'Test',
+      lastName: 'User',
+      email: 'testmail@mail.com',
+      phoneNumber: '+38514833888',
+    } as CreateBookingDto;
+
+    const conferenceResult = {
+      id: 1,
+      name: 'NestJS Conf',
+    } as Conference;
+
+    const conferenceId = 3;
+
+    jest
+      .spyOn(conferenceServiceMock, 'findOne')
+      .mockImplementation(() => Promise.resolve(conferenceResult));
+    jest.spyOn(repositoryMock, 'findOne').mockImplementation(() => {
+      return Promise.resolve({
+        id: 3,
+        firstName: 'OtherName',
+        lastName: 'OtherLastName',
+        email: 'othermail@mail.com',
+        phoneNumber: '+38514833888',
+        entryCode: 'test',
+        verified: false,
+      } as Booking);
+    });
+    jest.spyOn(repositoryMock, 'save');
+
+    await expect(service.create(conferenceId, dto)).rejects.toThrow(
+      BookingAlreadyExistsException,
+    );
+    expect(mailMock.sendMail).not.toHaveBeenCalled();
+    expect(repositoryMock.save).not.toHaveBeenCalled();
+  });
+
   describe('findAll', () => {
     it('should return all bookings for a given conference', async () => {
       const bookings = [
@@ -172,6 +215,7 @@ describe('BookingsService', () => {
           firstName: 'Test',
           lastName: 'Test1',
           email: 'test@mail.com',
+          phoneNumber: '+38514833888',
           entryCode: 'VVRKBZ',
           verified: false,
         },
@@ -180,6 +224,7 @@ describe('BookingsService', () => {
           firstName: 'Test',
           lastName: 'Test2',
           email: 'test2@mail.com',
+          phoneNumber: '+38514833889',
           entryCode: 'P5UVY4',
           verified: true,
         },
@@ -287,6 +332,7 @@ describe('BookingsService', () => {
         firstName: 'Test',
         lastName: 'Test1',
         email: 'test@mail.com',
+        phoneNumber: '+38514833888',
         entryCode,
         verified: false,
       } as Booking;
@@ -355,6 +401,7 @@ describe('BookingsService', () => {
         firstName: 'Test',
         lastName: 'Test1',
         email: 'test@mail.com',
+        phoneNumber: '+38514833888',
         entryCode,
         verified: true,
       } as Booking;
